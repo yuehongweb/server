@@ -8,7 +8,7 @@ class LoginController {
       code: "1234",
       expire: moment().add(30, "minutes").format("YYYY-MM-DD HH:mm:ss"),
       email: body.username,
-      user: "王一博",
+      user: "王一博455545",
     });
     ctx.body = {
       code: 200,
