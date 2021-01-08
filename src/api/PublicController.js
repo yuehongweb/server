@@ -8,7 +8,8 @@ class PublicController {
       ignoreChars:'0o1i',
       noise:3,
       color:true ,
-      background:'#f2f2f2'
+      background:'#f2f2f2',
+      height:35
     });
     ctx.body = {
       code:200,
