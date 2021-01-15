@@ -1,4 +1,4 @@
-import send from "../config/emailConfig";
+import send from "@/config/emailConfig";
 import moment from "moment";
 class LoginController {
   constructor() {}
@@ -14,6 +14,14 @@ class LoginController {
       code: 200,
       data: result,
     };
+  }
+
+  async login(ctx){
+    // 获取登录的信息
+    // 验证验证码的有效性和正确性
+    // 验证用户名和密码是否正确
+    // 返回token
+    console.log(ctx.request.body)
   }
 }
 

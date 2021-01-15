@@ -14,7 +14,7 @@ async function send(sendInfo) {
     secure: false, // true for 465, false for other ports
     auth: {
       user: '1175816606@qq.com', // generated ethereal user
-      pass: 'vvyytgsfmvkqghih', // generated ethereal password
+      pass: 'gkkvummzaobdhhjc', // generated ethereal password
     },
   });
 //  let sendInfo = {

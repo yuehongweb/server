@@ -1,21 +1,21 @@
-import redis from "redis";
-import { cli } from "webpack";
+import redis from 'redis';
+import config from './index';
 
 const options = {
-  host: "192.168.25.128",
-  port: 15001,
-  password: "123456",
+  host: config.REDIS.host,
+  port: config.REDIS.port,
+  password: config.REDIS.password,
   detect_buffers: true,
   retry_strategy: function (options) {
-    if (options.error && options.error.code === "ECONNREFUSED") {
+    if (options.error && options.error.code === 'ECONNREFUSED') {
       // End reconnecting on a specific error and flush all commands with
       // a individual error
-      return new Error("The server refused the connection");
+      return new Error('The server refused the connection');
     }
     if (options.total_retry_time > 1000 * 60 * 60) {
       // End reconnecting after a specific timeout and flush all commands
       // with a individual error
-      return new Error("Retry time exhausted");
+      return new Error('Retry time exhausted');
     }
     if (options.attempt > 10) {
       // End reconnecting with built in error
@@ -28,27 +28,27 @@ const options = {
 
 const client = redis.createClient(options);
 
-const setValue = (key, value) => {
-  if (typeof value === "undefined" || value === null || value === "") {
+const setValue = (key, value, time) => {
+  if (typeof value === 'undefined' || value === null || value === '') {
     return;
   }
-  if (typeof value === "string") {
-    return client.set(key, value);
-  } else if (typeof value === "object") {
+  if (typeof value === 'string') {
+    return time ? client.set(key, value, 'EX', time) : client.set(key, value);
+  } else if (typeof value === 'object') {
     Object.keys(value).forEach((item) => {
       client.hset(key, item, value[item], redis.print);
     });
   }
 };
 
-const { promisify } = require("util");
+const { promisify } = require('util');
 const getAsync = promisify(client.get).bind(client);
 
 const getValue = (key) => {
   return getAsync(key);
 };
 
-const getHValue = (key)=>{
-    return promisify(client.hgetall).bind(client)(key)
-}
+const getHValue = (key) => {
+  return promisify(client.hgetall).bind(client)(key);
+};
 export { client, setValue, getValue, getHValue };
