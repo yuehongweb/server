@@ -10,12 +10,13 @@ import compose from 'koa-compose'
 import compress from 'koa-compress'
 import JWT from 'koa-jwt'
 import config from '@/config/index'
+import errorHandle from '@/common/errorHandle'
 
 const app = new koa()
 
 const isDevMode = process.env.NODE_ENV === 'production' ? false : true
 
-// 定义公共的路径，不需要jwt鉴权
+// 定义公共的路径，不需要jwt鉴权(相当于路由拦截器)
 const jwt=JWT({ secret: config.JWT_SECRET }).unless({ path: [/^\/public/,/\/login/] })
 
 /**
@@ -27,6 +28,7 @@ const middleware = compose([
   cors(),
   jsonutil({ pretty: false, param: 'pretty' }),
   helmet(),
+  errorHandle,
   jwt
 ])
 
