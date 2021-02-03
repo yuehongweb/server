@@ -1,13 +1,12 @@
-import mongoose from '../config/DBhelper'
+import mongoose from '../config/DBhelper';
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const TestSchema = new Schema({
-    'name': { type: String},
-    'age': {type: Number},
-    'email': { type: String}
-})
+  username: { type: String },
+  password: { type: String }
+});
 
-const TestModel = mongoose.model('users',TestSchema)
+const TestModel = mongoose.model('users', TestSchema);
 
-export default TestModel
+export default TestModel;

@@ -9,7 +9,7 @@ const REDIS = {
   password: '123456',
 };
 
-// jwt 检验密码
+// jwt 检验密码  网上很多--随机密码生成
 const JWT_SECRET ='T*GhYJWZ&6yl8BNNkOC*QM&n5O58iernx!DyqTgA0U%oZPUl'
 export default {
   DB_URL,

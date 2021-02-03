@@ -1,7 +1,10 @@
 import send from '@/config/emailConfig';
 import moment from 'moment';
-import jsonwebtoken from 'jsonwebtoken'
-import config from '@/config'
+import jsonwebtoken from 'jsonwebtoken';
+import config from '@/config';
+import { checkCode } from '@/utils/index.js';
+import User from '../model/test';
+
 class LoginController {
   constructor() {}
   async forget(ctx) {
@@ -19,17 +22,39 @@ class LoginController {
   }
 
   async login(ctx) {
-    // 获取登录的信息
-    // 验证验证码的有效性和正确性
-    // 验证用户名和密码是否正确
-    // 返回token
-    let token = jsonwebtoken.sign({_id:'WANGYIBO'},config.JWT_SECRET,{
-      expiresIn: '1d'
-    })
-    ctx.body = {
-      code: 200,
-      token: token
-    };
+    // 判断图形验证码是否正确
+    const { body } = ctx.request;
+    let sid = body.sid;
+    let code = body.code;
+    // 验证码正确
+    let result = await checkCode(sid, code)
+    if (result) {
+      // 验证用户名和密码是否正确
+      let checkPassword = false;
+      let user = await User.findOne({username:body.username});
+      if (user&&(user.password === body.password)) {
+        checkPassword = true;
+      }
+      if (checkPassword) {
+        let token = jsonwebtoken.sign({ _id: 'WANGYIBO' }, config.JWT_SECRET, {
+          expiresIn: '1d',
+        });
+        ctx.body = {
+          code: 200,
+          token: token,
+        };
+      }else{
+        ctx.body = {
+          code: 404,
+          msg: '用户名或密码不正确',
+        };
+      }
+    } else {
+      ctx.body = {
+        code: 401,
+        msg: '验证码不正确',
+      };
+    }
   }
 }
 
