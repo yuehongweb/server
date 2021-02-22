@@ -4,6 +4,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import config from '@/config';
 import { checkCode } from '@/utils/index.js';
 import User from '../model/test';
+// import ErrorHandle from '@/common/ErrorHandle'
 
 class LoginController {
   constructor() {}
@@ -32,7 +33,8 @@ class LoginController {
       // 验证用户名和密码是否正确
       let checkPassword = false;
       let user = await User.findOne({username:body.username});
-      if (user&&(user.password === body.password)) {
+      // if (user&&(user.password === body.password)) {
+      if (user.password === body.password) {
         checkPassword = true;
       }
       if (checkPassword) {
@@ -44,12 +46,14 @@ class LoginController {
           token: token,
         };
       }else{
+        // 用户名或者密码不正确
         ctx.body = {
           code: 404,
           msg: '用户名或密码不正确',
         };
       }
     } else {
+      // 图片验证码验证失败
       ctx.body = {
         code: 401,
         msg: '验证码不正确',
